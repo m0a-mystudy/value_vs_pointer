@@ -15,53 +15,46 @@ type ValueVsPointer08 struct {
 	Filed8 int
 }
 
+//go:noinline
 func returnValue08(i ValueVsPointer08) ValueVsPointer08 {
 	return i
 }
 
+//go:noinline
 func returnPointer08(i *ValueVsPointer08) *ValueVsPointer08 {
 	return i
 }
 
 func BenchmarkUsePointerFieldCount08(b *testing.B) {
+	v := &ValueVsPointer08{
+		Filed1: 1,
+		Filed2: 2,
+		Filed3: 3,
+		Filed4: 4,
+		Filed5: 5,
+		Filed6: 6,
+		Filed7: 7,
+		Filed8: 8,
+	}
+	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		v := returnPointer08(
-			&ValueVsPointer08{
-				Filed1: 1,
-				Filed2: 2,
-				Filed3: 3,
-				Filed4: 4,
-				Filed5: 5,
-				Filed6: 6,
-				Filed7: 7,
-				Filed8: 8,
-			},
-		)
-		if v.Filed1 != 1 || v.Filed2 != 2 || v.Filed3 != 3 || v.Filed4 != 4 ||
-			v.Filed5 != 5 || v.Filed6 != 6 || v.Filed7 != 7 || v.Filed8 != 8 {
-			b.Fail()
-		}
+		v = returnPointer08(v)
 	}
 }
 
 func BenchmarkUseValueFieldCount08(b *testing.B) {
+	v := ValueVsPointer08{
+		Filed1: 1,
+		Filed2: 2,
+		Filed3: 3,
+		Filed4: 4,
+		Filed5: 5,
+		Filed6: 6,
+		Filed7: 7,
+		Filed8: 8,
+	}
+	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		v := returnValue08(
-			ValueVsPointer08{
-				Filed1: 1,
-				Filed2: 2,
-				Filed3: 3,
-				Filed4: 4,
-				Filed5: 5,
-				Filed6: 6,
-				Filed7: 7,
-				Filed8: 8,
-			},
-		)
-		if v.Filed1 != 1 || v.Filed2 != 2 || v.Filed3 != 3 || v.Filed4 != 4 ||
-			v.Filed5 != 5 || v.Filed6 != 6 || v.Filed7 != 7 || v.Filed8 != 8 {
-
-			b.Fail()
-		}
+		v = returnValue08(v)
 	}
 }

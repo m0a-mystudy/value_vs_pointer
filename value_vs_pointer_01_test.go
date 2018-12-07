@@ -8,28 +8,28 @@ type ValueVsPointer struct {
 	Filed1 int
 }
 
+//go:noinline
 func returnValue(i ValueVsPointer) ValueVsPointer {
 	return i
 }
 
+//go:noinline
 func returnPointer(i *ValueVsPointer) *ValueVsPointer {
 	return i
 }
 
 func BenchmarkUsePointerFieldCount01(b *testing.B) {
+	v := &ValueVsPointer{Filed1: 1}
+	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		v := returnPointer(&ValueVsPointer{Filed1: 1})
-		if v.Filed1 != 1 {
-			b.Fail()
-		}
+		v = returnPointer(v)
 	}
 }
 
 func BenchmarkUseValueFieldCount01(b *testing.B) {
+	v := ValueVsPointer{Filed1: 1}
+	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		v := returnValue(ValueVsPointer{Filed1: 1})
-		if v.Filed1 != 1 {
-			b.Fail()
-		}
+		v = returnValue(v)
 	}
 }
